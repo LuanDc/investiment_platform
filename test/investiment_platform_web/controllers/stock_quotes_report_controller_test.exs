@@ -22,5 +22,18 @@ defmodule InvestimentPlatformWeb.StockQuotesReportControllerTest do
         "max_range_value" => 40.0
       }
     end
+
+    test "should return 0 when stocks quotes is not found", %{conn: conn} do
+      query_params = %{"ticker" => "TICKER01", "date" => "2023-11-07"}
+      conn = get(conn, ~p"/stocks_quotes/reports", query_params)
+
+      response = json_response(conn, 200)
+
+      assert response == %{
+        "ticker" => "TICKER01",
+        "max_daily_volume" => 0,
+        "max_range_value" => 0
+      }
+    end
   end
 end
