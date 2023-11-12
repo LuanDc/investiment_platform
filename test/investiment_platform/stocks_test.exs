@@ -6,7 +6,7 @@ defmodule InvestimentPlatform.StocksTest do
   alias InvestimentPlatform.Stocks
 
   describe "get_max_quote/2" do
-    test "should returns the maximum quota from the date provided until current day" do
+    test "should return the maximum quota from the date provided until current day" do
       attrs = %{ticker: "TICKER01", date: "2023-11-08", price: 40.0}
       stock_quote = insert(:stock_quote, attrs)
 
@@ -46,6 +46,15 @@ defmodule InvestimentPlatform.StocksTest do
       result = Stocks.get_max_quote(ticker, start_date)
 
       assert result == 30.0
+    end
+
+    test "should return null when no stock quote is found" do
+      ticker = "TICKER01"
+      start_date = "2023-11-08"
+
+      result = Stocks.get_max_quote(ticker, start_date)
+
+      assert result == nil
     end
   end
 end
