@@ -15,9 +15,9 @@ defmodule InvestimentPlatformWeb.Router do
   end
 
   scope "/", InvestimentPlatformWeb do
-    pipe_through :browser
+    pipe_through :api
 
-    get "/", PageController, :home
+    get "/stocks_quotes/reports", StockQuotesReportController, :show
   end
 
   # Other scopes may use custom stacks.

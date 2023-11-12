@@ -10,7 +10,8 @@ defmodule InvestimentPlatform.Application do
     children = [
       InvestimentPlatformWeb.Telemetry,
       InvestimentPlatform.Repo,
-      {DNSCluster, query: Application.get_env(:investiment_platform, :dns_cluster_query) || :ignore},
+      {DNSCluster,
+       query: Application.get_env(:investiment_platform, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: InvestimentPlatform.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: InvestimentPlatform.Finch},
