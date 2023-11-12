@@ -42,6 +42,25 @@ defmodule InvestimentPlatformWeb.StockQuotesReportControllerTest do
       }
     end
 
+    test "should apply filter by date", %{conn: conn} do
+      attrs = %{ticker: "TICKER01", date: "2023-11-08", price: 30.0, amount: 70}
+      insert(:stock_quote, attrs)
+
+      attrs = %{ticker: "TICKER01", date: "2023-11-07", price: 40.0, amount: 80}
+      insert(:stock_quote, attrs)
+
+      query_params = %{"ticker" => "TICKER01", "date" => "2023-11-08"}
+      conn = get(conn, ~p"/stocks_quotes/reports", query_params)
+
+      response = json_response(conn, 200)
+
+      assert response == %{
+        "ticker" => "TICKER01",
+        "max_daily_volume" => 70,
+        "max_range_value" => 30.0
+      }
+    end
+
     test "should return 0 when stocks quotes is not found", %{conn: conn} do
       query_params = %{"ticker" => "TICKER01", "date" => "2023-11-07"}
       conn = get(conn, ~p"/stocks_quotes/reports", query_params)
