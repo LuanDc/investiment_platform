@@ -16,4 +16,20 @@ defmodule InvestimentPlatform.Stocks do
 
     Repo.one(query)
   end
+
+  @doc false
+  @spec get_max_daily_volume(String.t(), String.t()) :: integer() | nil
+  def get_max_daily_volume(ticker, date) do
+    sub_query =
+      from stq in StockQuote,
+        where: stq.ticker == ^ticker and stq.date >= ^date,
+        group_by: stq.date,
+        select: %{amount: sum(stq.amount)}
+
+    query =
+      from sq in subquery(sub_query),
+        select: max(sq.amount)
+
+    Repo.one(query)
+  end
 end
