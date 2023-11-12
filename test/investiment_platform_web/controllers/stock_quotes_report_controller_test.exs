@@ -11,7 +11,7 @@ defmodule InvestimentPlatformWeb.StockQuotesReportControllerTest do
       attrs = %{ticker: "TICKER01", date: "2023-11-08", amount: 80}
       insert(:stock_quote, attrs)
 
-      query_params = %{"ticker" => "TICKER01", "date" => "2023-11-07"}
+      query_params = %{"ticker" => "TICKER01", "start_date" => "2023-11-07"}
       conn = get(conn, ~p"/stocks_quotes/reports", query_params)
 
       response = json_response(conn, 200)
@@ -30,7 +30,7 @@ defmodule InvestimentPlatformWeb.StockQuotesReportControllerTest do
       attrs = %{ticker: "TICKER02", date: "2023-11-08", price: 40.0, amount: 80}
       insert(:stock_quote, attrs)
 
-      query_params = %{"ticker" => "TICKER01", "date" => "2023-11-08"}
+      query_params = %{"ticker" => "TICKER01", "start_date" => "2023-11-08"}
       conn = get(conn, ~p"/stocks_quotes/reports", query_params)
 
       response = json_response(conn, 200)
@@ -49,7 +49,7 @@ defmodule InvestimentPlatformWeb.StockQuotesReportControllerTest do
       attrs = %{ticker: "TICKER01", date: "2023-11-07", price: 40.0, amount: 80}
       insert(:stock_quote, attrs)
 
-      query_params = %{"ticker" => "TICKER01", "date" => "2023-11-08"}
+      query_params = %{"ticker" => "TICKER01", "start_date" => "2023-11-08"}
       conn = get(conn, ~p"/stocks_quotes/reports", query_params)
 
       response = json_response(conn, 200)
@@ -62,7 +62,7 @@ defmodule InvestimentPlatformWeb.StockQuotesReportControllerTest do
     end
 
     test "should return 0 when stocks quotes is not found", %{conn: conn} do
-      query_params = %{"ticker" => "TICKER01", "date" => "2023-11-07"}
+      query_params = %{"ticker" => "TICKER01", "start_date" => "2023-11-07"}
       conn = get(conn, ~p"/stocks_quotes/reports", query_params)
 
       response = json_response(conn, 200)
