@@ -32,5 +32,20 @@ defmodule InvestimentPlatform.StocksTest do
 
       assert result == 30.0
     end
+
+    test "should exclude ticker other than the one provided" do
+      attrs = %{ticker: "TICKER02", date: "2023-11-08", price: 40.0}
+      stock_quote = insert(:stock_quote, attrs)
+
+      attrs = %{ticker: "TICKER01", date: "2023-11-08", price: 30.0}
+      stock_quote = insert(:stock_quote, attrs)
+
+      ticker = "TICKER01"
+      start_date = "2023-11-08"
+
+      result = Stocks.get_max_quote(ticker, start_date)
+
+      assert result == 30.0
+    end
   end
 end
