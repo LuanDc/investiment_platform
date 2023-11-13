@@ -2,9 +2,9 @@
 
 To start your Phoenix server:
 
-  * Run `mix setup` to install and setup dependencies
   * Run `docker-compose up` to up database container.
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+  * Run `mix setup` to install and setup dependencies
+  * Start Phoenix endpoint inside IEx with `iex -S mix phx.server`
   * Run `InvestimentPlatformWorkers.InsertStockQuotes.perform(%{"paths" => ["/path", ...]})` to populate database. 
     You should save files on local machine and pass it directory as parameter.
 
