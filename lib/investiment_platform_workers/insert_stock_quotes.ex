@@ -1,12 +1,16 @@
 defmodule InvestimentPlatformWorkers.InsertStockQuotes do
-  @moduledoc false
+  @moduledoc """
+  This module is an adapter that process stock quotes.
+  """
 
   alias InvestimentPlatform.Repo
   alias InvestimentPlatform.Stocks.StockQuote
 
   NimbleCSV.define(CSV, separator: ";", escape: "\"")
 
-  @doc false
+  @doc """
+  Reads the content from the given file and insert all quotes in database.
+  """
   @spec perform(map()) :: :ok
   def perform(%{"path" => path}) do
     stream =
