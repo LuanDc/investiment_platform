@@ -7,7 +7,5 @@ defmodule InvestimentPlatform.Stocks.StockQuote do
     field :price, :float
     field :amount, :integer
     field :closing_time, :string
-
-    timestamps(type: :utc_datetime)
   end
 end

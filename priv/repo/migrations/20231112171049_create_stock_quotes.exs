@@ -8,8 +8,6 @@ defmodule InvestimentPlatform.Repo.Migrations.CreateStockQuotes do
       add :price, :float
       add :amount, :integer
       add :closing_time, :string
-
-      timestamps(type: :utc_datetime)
     end
   end
 end
