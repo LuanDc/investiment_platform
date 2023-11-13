@@ -13,30 +13,16 @@ defmodule InvestimentPlatformWorkers.InsertStockQuotes do
   """
   @spec perform(map()) :: :ok | list()
   def perform(%{"paths" => paths}) when is_list(paths) do
-    paths
-    |> Enum.map(&Task.async(fn -> process_file(&1) end))
-    |> Task.await_many()
-
-    :ok
-  end
-
-  defp process_file(path) when is_binary(path) do
-    stream =
+    for path <- paths do
       path
       |> File.stream!()
       |> CSV.to_line_stream()
       |> CSV.parse_stream()
       |> Stream.map(&parse_raw/1)
       |> Stream.chunk_every(500)
-
-    task_stream =
-      Task.Supervisor.async_stream_nolink(
-        InvestimentPlatform.TaskSupervisor,
-        stream,
-        &Repo.insert_all(StockQuote, &1)
-      )
-
-    Stream.run(task_stream)
+      |> Task.async_stream(&Repo.insert_all(StockQuote, &1))
+      |> Stream.run()
+    end
   end
 
   defp parse_raw([date, ticker, _action, price, amount, closing_time | _rest]) do
