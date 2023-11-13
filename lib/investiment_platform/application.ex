@@ -18,7 +18,8 @@ defmodule InvestimentPlatform.Application do
       # Start a worker by calling: InvestimentPlatform.Worker.start_link(arg)
       # {InvestimentPlatform.Worker, arg},
       # Start to serve requests, typically the last entry
-      InvestimentPlatformWeb.Endpoint
+      InvestimentPlatformWeb.Endpoint,
+      {Task.Supervisor, name: InvestimentPlatform.TaskSupervisor}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
