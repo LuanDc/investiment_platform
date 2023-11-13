@@ -8,7 +8,7 @@ To start your Phoenix server:
   * Run `InvestimentPlatformWorkers.InsertStockQuotes.perform(%{"paths" => ["/path", ...]})` to populate database. 
     You should save files on local machine and pass it directory as parameter.
 
-Now you can visit [localhost:4000/stocks_quotes/reports?ticker=WDOZ23&start_date=2023-10-24](localhost:4000/stocks_quotes/reports?ticker=WDOZ23&start_date=2023-10-24) from your browser.
+Now you can visit [localhost:4000/stocks_quotes/reports?ticker=WDOZ23&start_date=2023-10-24](http://localhost:4000/stocks_quotes/reports?ticker=WDOZ23&start_date=2023-10-24) from your browser.
 
 Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
 
