@@ -11,8 +11,16 @@ defmodule InvestimentPlatformWorkers.InsertStockQuotes do
   @doc """
   Reads the content from the given file and insert all quotes into database.
   """
-  @spec perform(map()) :: :ok
-  def perform(%{"path" => path}) do
+  @spec perform(map()) :: :ok | list()
+  def perform(%{"paths" => paths}) when is_list(paths) do
+    paths
+    |> Enum.map(&Task.async(fn -> process_file(&1) end))
+    |> Task.await_many()
+
+    :ok
+  end
+
+  defp process_file(path) when is_binary(path) do
     stream =
       path
       |> File.stream!()
