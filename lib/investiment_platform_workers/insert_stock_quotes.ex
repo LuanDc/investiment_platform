@@ -9,7 +9,7 @@ defmodule InvestimentPlatformWorkers.InsertStockQuotes do
   NimbleCSV.define(CSV, separator: ";", escape: "\"")
 
   @doc """
-  Reads the content from the given file and insert all quotes in database.
+  Reads the content from the given file and insert all quotes into database.
   """
   @spec perform(map()) :: :ok
   def perform(%{"path" => path}) do

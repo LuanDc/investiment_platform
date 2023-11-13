@@ -9,5 +9,7 @@ defmodule InvestimentPlatform.Repo.Migrations.CreateStockQuotes do
       add :amount, :integer
       add :closing_time, :string
     end
+
+    create index("stock_quotes", [:ticker, :date])
   end
 end
