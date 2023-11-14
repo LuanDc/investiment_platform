@@ -14,13 +14,16 @@ defmodule InvestimentPlatformWorkers.InsertStockQuotes do
   @spec perform(map()) :: :ok | list()
   def perform(%{"paths" => paths}) when is_list(paths) do
     for path <- paths do
-      path
-      |> File.stream!()
-      |> CSV.to_line_stream()
-      |> CSV.parse_stream()
-      |> Stream.map(&parse_raw/1)
-      |> Stream.chunk_every(500)
-      |> Task.async_stream(&Repo.insert_all(StockQuote, &1))
+      stream =
+        path
+        |> File.stream!()
+        |> CSV.to_line_stream()
+        |> CSV.parse_stream()
+        |> Stream.map(&parse_raw/1)
+        |> Stream.chunk_every(500)
+
+      InvestimentPlatform.TaskSupervisor
+      |> Task.Supervisor.async_stream_nolink(stream, &Repo.insert_all(StockQuote, &1), ordered: false)
       |> Stream.run()
     end
   end
