@@ -16,7 +16,7 @@ defmodule InvestimentPlatformWorkers.InsertStockQuotes do
     for path <- paths do
       stream =
         path
-        |> File.stream!()
+        |> File.stream!(read_ahead: 1000)
         |> CSV.to_line_stream()
         |> CSV.parse_stream()
         |> Stream.map(&parse_raw/1)
