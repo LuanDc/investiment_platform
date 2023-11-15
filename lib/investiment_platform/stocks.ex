@@ -24,8 +24,10 @@ defmodule InvestimentPlatform.Stocks do
   def get_max_quote(ticker, start_date) when is_binary(ticker) and is_binary(start_date) do
     query =
       from sq in StockQuote,
-        where: sq.ticker == ^ticker and sq.date >= ^start_date,
+        where: sq.ticker == ^ticker,
         select: max(sq.price)
+
+    query = apply_optional_start_date_filter(query, start_date)
 
     Repo.one(query)
   end
@@ -44,16 +46,24 @@ defmodule InvestimentPlatform.Stocks do
   """
   @spec get_max_daily_volume(String.t(), String.t()) :: integer() | nil
   def get_max_daily_volume(ticker, start_date) when is_binary(ticker) and is_binary(start_date) do
-    sub_query =
+    query =
       from stq in StockQuote,
-        where: stq.ticker == ^ticker and stq.date >= ^start_date,
+        where: stq.ticker == ^ticker,
         group_by: stq.date,
         select: %{amount: sum(stq.amount)}
 
+    query = apply_optional_start_date_filter(query, start_date)
+
     query =
-      from sq in subquery(sub_query),
+      from sq in subquery(query),
         select: max(sq.amount)
 
     Repo.one(query)
   end
+
+  defp apply_optional_start_date_filter(query, ""), do:
+    query
+
+  defp apply_optional_start_date_filter(query, start_date) when is_binary(start_date),
+    do: (from q in query, where: q.date >= ^start_date)
 end
