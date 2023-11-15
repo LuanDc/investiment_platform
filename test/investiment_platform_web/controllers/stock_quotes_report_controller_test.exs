@@ -38,7 +38,7 @@ defmodule InvestimentPlatformWeb.StockQuotesReportControllerTest do
              }
     end
 
-    test "should apply filter by start_date", %{conn: conn} do
+    test "should apply filter by start_date when it's provided", %{conn: conn} do
       insert(:stock_quote, ticker: "TICKER01", date: "2023-11-08", price: 30.0, amount: 70)
       insert(:stock_quote, ticker: "TICKER01", date: "2023-11-07", price: 40.0, amount: 80)
 
