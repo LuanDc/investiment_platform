@@ -11,7 +11,7 @@ defmodule InvestimentPlatformWeb.StockQuotesReportControllerTest do
       attrs = %{ticker: "TICKER01", date: "2023-11-08", amount: 80}
       insert(:stock_quote, attrs)
 
-      query_params = %{"ticker" => "TICKER01", "start_date" => "2023-11-07"}
+      query_params = %{"ticker" => "TICKER01"}
       conn = get(conn, ~p"/stocks_quotes/reports", query_params)
 
       response = json_response(conn, 200)

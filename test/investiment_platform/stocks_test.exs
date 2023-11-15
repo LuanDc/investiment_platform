@@ -48,6 +48,21 @@ defmodule InvestimentPlatform.StocksTest do
       assert result == 30.0
     end
 
+    test "shouldn't apply start_date filter when it's an empty string" do
+      attrs = %{ticker: "TICKER01", date: "2023-11-07", price: 40.0}
+      insert(:stock_quote, attrs)
+
+      attrs = %{ticker: "TICKER01", date: "2023-11-08", price: 30.0}
+      insert(:stock_quote, attrs)
+
+      ticker = "TICKER01"
+      start_date = ""
+
+      result = Stocks.get_max_quote(ticker, start_date)
+
+      assert result == 40.0
+    end
+
     test "should return null when no stock quote is found" do
       ticker = "TICKER01"
       start_date = "2023-11-08"
@@ -110,6 +125,20 @@ defmodule InvestimentPlatform.StocksTest do
       result = Stocks.get_max_daily_volume(ticker, start_date)
 
       assert result == 80
+    end
+
+    test "shouldn't apply start_date filter when it's an empty string" do
+      attrs = %{ticker: "TICKER01", date: "2023-11-07", amount: 50}
+      insert(:stock_quote, attrs)
+      attrs = %{ticker: "TICKER01", date: "2023-11-08", amount: 30}
+      insert(:stock_quote, attrs)
+
+      ticker = "TICKER01"
+      start_date = ""
+
+      result = Stocks.get_max_daily_volume(ticker, start_date)
+
+      assert result == 50
     end
 
     test "should return null when no stock quote is found" do
