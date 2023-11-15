@@ -1,4 +1,6 @@
 defmodule InvestimentPlatform.Stocks.StockQuote do
+  @moduledoc false
+
   use Ecto.Schema
 
   schema "stock_quotes" do

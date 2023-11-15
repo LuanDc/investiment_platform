@@ -1,4 +1,5 @@
 defmodule InvestimentPlatform.Factory do
+  @moduledoc false
   use ExMachina.Ecto, repo: InvestimentPlatform.Repo
 
   alias InvestimentPlatform.Stocks.StockQuote
