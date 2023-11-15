@@ -23,7 +23,9 @@ defmodule InvestimentPlatformWorkers.InsertStockQuotes do
         |> Stream.chunk_every(500)
 
       InvestimentPlatform.TaskSupervisor
-      |> Task.Supervisor.async_stream_nolink(stream, &Repo.insert_all(StockQuote, &1), ordered: false)
+      |> Task.Supervisor.async_stream_nolink(stream, &Repo.insert_all(StockQuote, &1),
+        ordered: false
+      )
       |> Stream.run()
     end
   end

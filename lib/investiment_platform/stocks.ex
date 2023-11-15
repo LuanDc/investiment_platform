@@ -61,9 +61,15 @@ defmodule InvestimentPlatform.Stocks do
     Repo.one(query)
   end
 
-  defp apply_optional_start_date_filter(query, ""), do:
-    query
+  defp apply_optional_start_date_filter(query, ""), do: query
 
-  defp apply_optional_start_date_filter(query, start_date) when is_binary(start_date),
-    do: (from q in query, where: q.date >= ^start_date)
+  defp apply_optional_start_date_filter(query, start_date) when is_binary(start_date) do
+    case Date.from_iso8601(start_date) do
+      {:ok, _datetime} ->
+        from q in query, where: q.date >= ^start_date
+
+      {:error, _reason} ->
+        query
+    end
+  end
 end
