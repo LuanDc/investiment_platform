@@ -1,6 +1,5 @@
 defmodule InvestimentPlatform.Stocks.StockQuote do
   @moduledoc false
-
   use Ecto.Schema
 
   schema "stock_quotes" do
@@ -9,5 +8,6 @@ defmodule InvestimentPlatform.Stocks.StockQuote do
     field :price, :float
     field :amount, :integer
     field :closing_time, :string
+    field :event_id, :string
   end
 end

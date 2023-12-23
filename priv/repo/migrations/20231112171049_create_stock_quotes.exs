@@ -8,8 +8,10 @@ defmodule InvestimentPlatform.Repo.Migrations.CreateStockQuotes do
       add :price, :float
       add :amount, :integer
       add :closing_time, :string
+      add :event_id, :string
     end
 
-    create index("stock_quotes", [:ticker, :date])
+    create index(:stock_quotes, [:ticker, :date])
+    create unique_index(:stock_quotes, [:event_id])
   end
 end
