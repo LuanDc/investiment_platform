@@ -19,7 +19,7 @@ defmodule InvestimentPlatform.MixProject do
   def application do
     [
       mod: {InvestimentPlatform.Application, []},
-      extra_applications: [:logger, :runtime_tools, :observer, :wx]
+      extra_applications: [:logger, :runtime_tools]
     ]
   end
 

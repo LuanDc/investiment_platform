@@ -1,8 +1,17 @@
 version: '3'
 
 services:
-  postgres:
-    image: postgres
+  app:
+    build: .
+    environment:
+      DATABASE_URL: ecto://postgres:postgres@db/investiment_platform_dev
+      SECRET_KEY_BASE: aTnq/GCvShuNbwSVreSKdDb2GFr1d3o1ygRi3mdfDaYtRmXjRlJizqxM7l7LQ9SL
+      PHX_HOST: "localhost"
+    ports:
+      - 4000:4000
+
+  db:
+    image: postgres:17.0
     volumes:
       - postgres:/var/lib/postgres/data
     environment:

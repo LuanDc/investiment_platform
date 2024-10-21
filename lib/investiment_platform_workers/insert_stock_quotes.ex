@@ -25,9 +25,12 @@ defmodule InvestimentPlatformWorkers.InsertStockQuotes do
       end)
       |> Stream.map(&parse_raw/1)
       |> Stream.chunk_every(500)
-      |> Task.async_stream(fn batch ->
-        Repo.insert_all(StockQuote, batch)
-      end, ordered: false)
+      |> Task.async_stream(
+        fn batch ->
+          Repo.insert_all(StockQuote, batch)
+        end,
+        ordered: false
+      )
       |> Stream.run()
     end
   end
