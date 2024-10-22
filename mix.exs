@@ -56,7 +56,10 @@ defmodule InvestimentPlatform.MixProject do
       {:ex_machina, "~> 2.7.0", only: :test},
       {:nimble_csv, "~> 1.1"},
       {:benchee, "~> 1.3.1", only: :dev},
-      {:prom_ex, "~> 1.10.0"}
+      {:prom_ex, "~> 1.10.0"},
+      {:nebulex, "~> 2.6"},
+      {:decorator, "~> 1.4"},
+      {:nebulex_redis_adapter, "~> 2.3"}
     ]
   end
 

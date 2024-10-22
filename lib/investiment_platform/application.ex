@@ -11,6 +11,7 @@ defmodule InvestimentPlatform.Application do
       InvestimentPlatform.PromEx,
       InvestimentPlatformWeb.Telemetry,
       InvestimentPlatform.Repo,
+      InvestimentPlatform.Cache,
       {DNSCluster,
        query: Application.get_env(:investiment_platform, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: InvestimentPlatform.PubSub},

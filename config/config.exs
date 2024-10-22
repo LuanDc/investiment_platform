@@ -72,6 +72,12 @@ config :investiment_platform, InvestimentPlatform.PromEx,
     # auth_token: "glsa_W...",
   ]
 
+config :investiment_platform, InvestimentPlatform.Cache,
+  conn_opts: [
+    host: "cache:6379",
+    port: 6379
+  ]
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
