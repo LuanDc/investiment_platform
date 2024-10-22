@@ -8,6 +8,7 @@ defmodule InvestimentPlatform.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      InvestimentPlatform.PromEx,
       InvestimentPlatformWeb.Telemetry,
       InvestimentPlatform.Repo,
       {DNSCluster,

@@ -55,7 +55,8 @@ defmodule InvestimentPlatform.MixProject do
       {:dialyxir, "~> 1.4.4", only: [:dev, :test], runtime: false},
       {:ex_machina, "~> 2.7.0", only: :test},
       {:nimble_csv, "~> 1.1"},
-      {:benchee, "~> 1.3.1", only: :dev}
+      {:benchee, "~> 1.3.1", only: :dev},
+      {:prom_ex, "~> 1.10.0"}
     ]
   end
 

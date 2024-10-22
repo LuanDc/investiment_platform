@@ -61,6 +61,17 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+# Configures PromEx
+config :investiment_platform, InvestimentPlatform.PromEx,
+  manual_metrics_start_delay: :no_delay,
+  grafana: [
+    host: "http://grafana:3000",
+    upload_dashboards_on_start: true,
+    folder_name: "Investiment Platform Dashboards",
+    annotate_app_lifecycle: true
+    # auth_token: "glsa_W...",
+  ]
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
