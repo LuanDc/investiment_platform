@@ -19,6 +19,14 @@ services:
     ports:
       - "5432:5432"
 
+  redis:
+    image: redis
+    command: redis-server --requirepass admin
+    volumes:
+      - cache:/root/redis
+    ports:
+      - "6379:6379"
+
   prometheus:
     image: prom/prometheus
     container_name: prometheus
@@ -42,4 +50,6 @@ services:
 
 volumes:
   postgres:
+    driver: local
+  cache:
     driver: local
