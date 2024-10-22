@@ -2,11 +2,14 @@ defmodule InvestimentPlatform.Stocks do
   @moduledoc """
   This module is responsible for exposing functions about stocks exchange context.
   """
+  use Nebulex.Caching
 
   import Ecto.Query
 
-  alias InvestimentPlatform.Repo
+  alias InvestimentPlatform.{Cache, Repo}
   alias InvestimentPlatform.Stocks.StockQuote
+
+  @ttl :timer.hours(1)
 
   @doc """
   Returns the maximum daily stock quote. If no stock quotes is found, returns nil.
@@ -21,6 +24,7 @@ defmodule InvestimentPlatform.Stocks do
 
   """
   @spec get_max_quote(String.t(), String.t()) :: integer() | nil
+  @decorate cacheable(cache: Cache, key: {:max_quote, ticker, start_date}, opts: [ttl: @ttl])
   def get_max_quote(ticker, start_date) when is_binary(ticker) and is_binary(start_date) do
     query =
       from sq in StockQuote,
@@ -45,6 +49,7 @@ defmodule InvestimentPlatform.Stocks do
 
   """
   @spec get_max_daily_volume(String.t(), String.t()) :: integer() | nil
+  @decorate cacheable(cache: Cache, key: {:max_daily_volume, ticker, start_date}, opts: [ttl: @ttl])
   def get_max_daily_volume(ticker, start_date) when is_binary(ticker) and is_binary(start_date) do
     query =
       from stq in StockQuote,
