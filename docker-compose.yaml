@@ -27,6 +27,14 @@ services:
     ports:
       - "6379:6379"
 
+  redis-exporter:
+    image: oliver006/redis_exporter:v1.6.0-alpine
+    ports:
+      - 9121:9121
+    command:
+      - '--redis.addr=redis://redis:6379'
+      - '--redis.password=admin'
+
   prometheus:
     image: prom/prometheus
     container_name: prometheus
