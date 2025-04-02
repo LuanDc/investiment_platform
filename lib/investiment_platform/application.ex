@@ -21,7 +21,8 @@ defmodule InvestimentPlatform.Application do
       # {InvestimentPlatform.Worker, arg},
       # Start to serve requests, typically the last entry
       InvestimentPlatformWeb.Endpoint,
-      {Task.Supervisor, name: InvestimentPlatform.TaskSupervisor}
+      {Task.Supervisor, name: InvestimentPlatform.TaskSupervisor},
+      {Oban, Application.fetch_env!(:investiment_platform, Oban)}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

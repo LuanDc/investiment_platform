@@ -22,6 +22,15 @@ config :investiment_platform, InvestimentPlatformWeb.Endpoint,
   pubsub_server: InvestimentPlatform.PubSub,
   live_view: [signing_salt: "7BQYLm/w"]
 
+config :investiment_platform, Oban,
+  engine: Oban.Engines.Basic,
+  repo: InvestimentPlatform.Repo,
+  plugins: [Oban.Plugins.Pruner],
+  queues: [
+    b3_stock_quotes_download: 5,
+    csv_splitter: 5
+  ]
+
 # Configures the mailer
 #
 # By default it uses the "Local" adapter which stores the emails
