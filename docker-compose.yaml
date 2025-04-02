@@ -63,6 +63,14 @@ services:
     volumes:
       - ./grafana:/etc/grafana/provisioning/datasources
 
+  localstack:
+    image: localstack/localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3
+      - DEFAULT_REGION=us-east-1
+
 volumes:
   postgres:
     driver: local
