@@ -35,3 +35,17 @@ investiment_platform-*.tar
 npm-debug.log
 /assets/node_modules/
 
+# Terraform state files
+*.tfstate
+*.tfstate.*
+
+# Terraform plan files
+*.tfplan
+
+# Terraform provider plugins
+.terraform/
+.terraform.lock.hcl
+
+# Crash logs
+crash.log
+
