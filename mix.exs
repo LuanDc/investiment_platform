@@ -59,7 +59,12 @@ defmodule InvestimentPlatform.MixProject do
       {:prom_ex, "~> 1.10.0"},
       {:nebulex, "~> 2.6"},
       {:decorator, "~> 1.4"},
-      {:nebulex_redis_adapter, "~> 2.3"}
+      {:nebulex_redis_adapter, "~> 2.3"},
+      {:httpoison, "~> 1.8"},
+      {:ex_aws, "~> 2.1"},
+      {:ex_aws_s3, "~> 2.1"},
+      {:hackney, "~> 1.17"},
+      {:sweet_xml, "~> 0.7"}
     ]
   end
 
