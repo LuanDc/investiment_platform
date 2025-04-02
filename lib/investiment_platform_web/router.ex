@@ -17,6 +17,7 @@ defmodule InvestimentPlatformWeb.Router do
   scope "/", InvestimentPlatformWeb do
     pipe_through :api
 
+    post "/stocks_quotes/download", B3DownloaderController, :trigger_download
     get "/stocks_quotes/reports", StockQuotesReportController, :show
   end
 

@@ -10,6 +10,15 @@ config :investiment_platform, InvestimentPlatform.Repo,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
+config :ex_aws,
+  access_key_id: "test",
+  secret_access_key: "test"
+
+config :ex_aws, :s3,
+  scheme: "http://",
+  host: "localhost",
+  port: 4566
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #
