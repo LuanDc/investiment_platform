@@ -62,9 +62,10 @@ defmodule InvestimentPlatform.PromEx do
       # PromEx built in plugins
       Plugins.Application,
       Plugins.Beam,
-      {Plugins.Phoenix, router: InvestimentPlatformWeb.Router, endpoint: InvestimentPlatformWeb.Endpoint},
+      {Plugins.Phoenix,
+       router: InvestimentPlatformWeb.Router, endpoint: InvestimentPlatformWeb.Endpoint},
       Plugins.Ecto,
-      # Plugins.Oban,
+      Plugins.Oban
       # Plugins.PhoenixLiveView,
       # Plugins.Absinthe,
       # Plugins.Broadway,
@@ -90,7 +91,7 @@ defmodule InvestimentPlatform.PromEx do
       {:prom_ex, "beam.json"},
       {:prom_ex, "phoenix.json"},
       {:prom_ex, "ecto.json"},
-      # {:prom_ex, "oban.json"},
+      {:prom_ex, "oban.json"}
       # {:prom_ex, "phoenix_live_view.json"},
       # {:prom_ex, "absinthe.json"},
       # {:prom_ex, "broadway.json"},
