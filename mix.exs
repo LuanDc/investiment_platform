@@ -65,7 +65,8 @@ defmodule InvestimentPlatform.MixProject do
       {:ex_aws_s3, "~> 2.1"},
       {:hackney, "~> 1.17"},
       {:sweet_xml, "~> 0.7"},
-      {:oban, "~> 2.19.4"}
+      {:oban, "~> 2.19.4"},
+      {:unzip, "~> 0.12.0"}
     ]
   end
 
