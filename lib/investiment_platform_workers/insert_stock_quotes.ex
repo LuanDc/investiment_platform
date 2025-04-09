@@ -1,48 +1,69 @@
 defmodule InvestimentPlatformWorkers.InsertStockQuotes do
-  @moduledoc """
-  This module is an adapter that process stock quotes.
-  """
+  use Oban.Worker, queue: :stock_quotes_processing
+
+  require Logger
 
   alias InvestimentPlatform.Repo
   alias InvestimentPlatform.Stocks.StockQuote
 
   NimbleCSV.define(CSV, separator: ";", escape: "\"")
 
-  @doc """
-  Reads the content from the given file and insert all quotes into database.
-  """
-  @spec perform(map()) :: :ok | list()
-  def perform(%{"paths" => paths}) when is_list(paths) do
-    for path <- paths do
-      path
-      |> File.stream!(read_ahead: 1000)
-      |> CSV.to_line_stream()
-      |> CSV.parse_stream()
-      |> Stream.map(fn raw ->
-        sha256 = :crypto.hash(:sha256, raw)
-        event_id = Base.encode16(sha256, case: :lower)
-        {event_id, raw}
-      end)
-      |> Stream.map(&parse_raw/1)
-      |> Stream.chunk_every(500)
-      |> Task.async_stream(
-        fn batch ->
-          Repo.insert_all(StockQuote, batch)
-        end,
-        ordered: false
-      )
-      |> Stream.run()
-    end
+  def insert_stock_quotes(params) do
+    params
+    |> __MODULE__.new()
+    |> Oban.insert()
   end
 
-  defp parse_raw({event_id, [date, ticker, _action, price, amount, closing_time | _rest]}) do
+  @impl Oban.Worker
+  def perform(%Oban.Job{args: %{"bucket_name" => bucket_name, "file_name" => file_name}}) do
+    Logger.info("Downloading ZIP file #{file_name} from bucket #{bucket_name}")
+
+    bucket_name
+    |> read_from_s3_unziped(file_name)
+    |> process_file()
+  end
+
+  defp read_from_s3_unziped(bucket_name, file_name) do
+    aws_s3_config = ExAws.Config.new(:s3)
+    file = Unzip.S3File.new(file_name, bucket_name, aws_s3_config)
+    {:ok, unzip} = Unzip.new(file)
+    file_name = String.replace_suffix(file_name, ".zip", ".txt")
+    Unzip.file_stream!(unzip, file_name)
+  end
+
+  defp process_file(stream) do
+    stream
+    |> Stream.map(&IO.iodata_to_binary/1)
+    |> CSV.to_line_stream()
+    |> CSV.parse_stream(skip_headers: true)
+    |> Stream.map(&parse_raw/1)
+    |> Stream.chunk_every(100)
+    |> Stream.map(&Repo.insert_all(StockQuote, &1, on_conflict: :nothing))
+    |> Stream.run()
+  end
+
+  defp parse_raw(row) do
+    closing_time = Enum.at(row, 5)
+    ticker = Enum.at(row, 1)
+
+    date = Enum.at(row, 0) |> Date.from_iso8601!()
+    {price, _} = Enum.at(row, 3) |> Float.parse()
+    {amount, _} = Enum.at(row, 4) |> Integer.parse()
+
+    event_id = generate_event_id(row)
+
     %{
       closing_time: closing_time,
       ticker: ticker,
-      price: String.to_float(price),
-      date: Date.from_iso8601!(date),
-      amount: String.to_integer(amount),
+      price: price,
+      date: date,
+      amount: amount,
       event_id: event_id
     }
+  end
+
+  defp generate_event_id(row) do
+    sha256 = :crypto.hash(:sha256, row)
+    Base.encode16(sha256, case: :lower)
   end
 end

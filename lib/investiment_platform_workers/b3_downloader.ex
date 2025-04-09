@@ -6,23 +6,31 @@ defmodule B3Downloader do
 
   require Logger
   alias ExAws.S3
+  alias InvestimentPlatformWorkers.InsertStockQuotes
 
   @b3_url "https://arquivos.b3.com.br/rapinegocios/tickercsv/2025-04-01"
   @bucket_name "b3-stock-quotes"
-  @file_name "cotacoes_2025-04-01.zip"
 
   def download_and_upload_to_s3 do
     %{}
     |> __MODULE__.new()
     |> Oban.insert()
+    |> case do
+      {:ok, _job} ->
+        {:ok, "File uploaded successfully"}
+
+      {:error, reason} ->
+        {:error, "Failed to enqueue job. Reason: #{inspect(reason)}"}
+    end
   end
 
   @impl Oban.Worker
   def perform(_args) do
-    with {:ok, body} <- download_file(),
-         {:ok, _response} <- upload_to_s3(body) do
+    with {:ok, {file_name, body}} <- download_file(),
+         {:ok, _response} <- upload_to_s3(file_name, body),
+         {:ok, _job} <- process_stock_quotes(file_name) do
       Logger.info("B3Downloader completed successfully.")
-      {:ok, "File #{@file_name} uploaded successfully to."}
+      :ok
     else
       {:error, reason} ->
         Logger.error("B3Downloader failed. Reason: #{inspect(reason)}")
@@ -34,9 +42,9 @@ defmodule B3Downloader do
     Logger.info("Starting download from #{@b3_url}")
 
     case HTTPoison.get(@b3_url, [], follow_redirect: true) do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+      {:ok, %HTTPoison.Response{status_code: 200, body: body, headers: headers}} ->
         Logger.info("Download successful.")
-        {:ok, body}
+        {:ok, {check_filename(headers), body}}
 
       {:ok, %HTTPoison.Response{status_code: status_code}} ->
         {:error, "Failed to download file. Status code: #{status_code}"}
@@ -46,16 +54,38 @@ defmodule B3Downloader do
     end
   end
 
-  defp upload_to_s3(body) do
-    Logger.info("Uploading #{@file_name} to S3 bucket #{@bucket_name}")
+  defp upload_to_s3(file_name, body) do
+    Logger.info("Uploading #{file_name} to S3 bucket #{@bucket_name}")
 
-    case S3.put_object(@bucket_name, @file_name, body) |> ExAws.request() do
+    case S3.put_object(@bucket_name, file_name, body) |> ExAws.request() do
       {:ok, response} ->
         Logger.info("Upload successful: #{inspect(response)}")
-        {:ok, {@bucket_name, @file_name}}
+        {:ok, response}
 
       {:error, reason} ->
         {:error, "Failed to upload file to S3. Reason: #{inspect(reason)}"}
+    end
+  end
+
+  defp process_stock_quotes(file_name) do
+    InsertStockQuotes.insert_stock_quotes(%{
+      "bucket_name" => @bucket_name,
+      "file_name" => file_name
+    })
+  end
+
+  defp check_filename(headers) do
+    Enum.find(headers, fn {key, _value} -> String.downcase(key) == "content-disposition" end)
+    |> case do
+      nil ->
+        nil
+
+      {_key, value} ->
+        Regex.named_captures(~r/filename="?(?<filename>[^"]+)"?/, value)
+        |> case do
+          %{"filename" => filename} -> filename
+          _ -> nil
+        end
     end
   end
 end
